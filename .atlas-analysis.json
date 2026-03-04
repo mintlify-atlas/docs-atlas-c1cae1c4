@@ -1,0 +1,62 @@
+{
+  "projectType": "frontend",
+  "projectName": "HNG",
+  "projectDescription": "A React application bootstrapped with Create React App",
+  "theme": "mint",
+  "primaryColor": "#232323",
+  "lightColor": "#61dafb",
+  "darkColor": "#282c34",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Development",
+        "pages": [
+          "development/setup",
+          "development/project-structure",
+          "development/available-scripts"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/app-component"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/building",
+          "deployment/deploying"
+        ]
+      },
+      {
+        "group": "Testing",
+        "pages": [
+          "testing/running-tests"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "React 18.2.0 with modern hooks support",
+    "Create React App configuration",
+    "Built-in test setup with Jest and React Testing Library",
+    "Hot reload development server",
+    "Production-optimized build process"
+  ],
+  "publicApiSurface": [
+    "App component",
+    "reportWebVitals utility",
+    "React 18 createRoot API",
+    "npm start - development server",
+    "npm build - production build",
+    "npm test - test runner"
+  ]
+}
