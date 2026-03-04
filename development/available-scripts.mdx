@@ -1,0 +1,392 @@
+---
+title: "Available Scripts"
+description: "Learn about all npm scripts available in the HNG React project"
+---
+
+## Overview
+
+The HNG React project includes several npm scripts powered by `react-scripts` from Create React App. These scripts handle development, testing, building, and configuration management.
+
+<Note>
+  All scripts are defined in `package.json:14-18`
+</Note>
+
+## Development Scripts
+
+### npm start
+
+Runs the application in development mode with hot reloading.
+
+```bash
+npm start
+```
+
+<AccordionGroup>
+  <Accordion title="What it does">
+    - Starts the development server on `http://localhost:3000`
+    - Opens your default browser automatically
+    - Watches for file changes and hot-reloads the app
+    - Displays lint errors and warnings in the console
+    - Shows build errors as an overlay in the browser
+  </Accordion>
+
+  <Accordion title="Expected output">
+    ```bash
+    Compiled successfully!
+
+    You can now view hng in the browser.
+
+      Local:            http://localhost:3000
+      On Your Network:  http://192.168.1.10:3000
+
+    Note that the development build is not optimized.
+    To create a production build, use npm run build.
+
+    webpack compiled successfully
+    ```
+  </Accordion>
+
+  <Accordion title="Usage tips">
+    <Tip>
+      The development server supports Fast Refresh. Edit `src/App.js:10` and save - changes appear instantly without losing component state.
+    </Tip>
+
+    **Stopping the server:**
+    Press `Ctrl+C` in the terminal to stop the development server.
+
+    **Using a different port:**
+    ```bash
+    PORT=3001 npm start
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Testing Scripts
+
+### npm test
+
+Launches the test runner in interactive watch mode.
+
+```bash
+npm test
+```
+
+<AccordionGroup>
+  <Accordion title="What it does">
+    - Runs all test files matching `*.test.js` or `*.spec.js`
+    - Watches for changes and re-runs affected tests
+    - Provides an interactive interface for test filtering
+    - Shows test coverage when requested
+    - Uses Jest as the test runner
+  </Accordion>
+
+  <Accordion title="Expected output">
+    ```bash
+    PASS  src/App.test.js
+      ✓ renders learn react link (25 ms)
+
+    Test Suites: 1 passed, 1 total
+    Tests:       1 passed, 1 total
+    Snapshots:   0 total
+    Time:        1.234 s
+    Ran all test suites.
+
+    Watch Usage
+     › Press a to run all tests.
+     › Press f to run only failed tests.
+     › Press q to quit watch mode.
+     › Press p to filter by a filename regex pattern.
+     › Press t to filter by a test name regex pattern.
+     › Press Enter to trigger a test run.
+    ```
+  </Accordion>
+
+  <Accordion title="Interactive commands">
+    While tests are running, you can use these commands:
+
+    | Key | Action |
+    |-----|--------|
+    | `a` | Run all tests |
+    | `f` | Run only failed tests |
+    | `p` | Filter by filename pattern |
+    | `t` | Filter by test name pattern |
+    | `q` | Quit watch mode |
+    | `Enter` | Trigger a test run |
+  </Accordion>
+
+  <Accordion title="Coverage report">
+    Generate a test coverage report:
+
+    ```bash
+    npm test -- --coverage --watchAll=false
+    ```
+
+    Coverage reports are saved to the `/coverage` directory (excluded by `.gitignore:9`).
+  </Accordion>
+</AccordionGroup>
+
+### Running Specific Tests
+
+<CodeGroup>
+```bash Run a specific test file
+npm test App.test.js
+```
+
+```bash Run tests matching a pattern
+npm test -- --testNamePattern="renders"
+```
+
+```bash Run tests in CI mode (no watch)
+npm test -- --watchAll=false
+```
+</CodeGroup>
+
+## Build Scripts
+
+### npm run build
+
+Creates an optimized production build of the application.
+
+```bash
+npm run build
+```
+
+<AccordionGroup>
+  <Accordion title="What it does">
+    - Bundles React in production mode for best performance
+    - Minifies JavaScript and CSS files
+    - Optimizes images and other assets
+    - Generates hashed filenames for cache busting
+    - Creates a `build/` directory with deployable files
+    - Includes source maps for debugging production issues
+  </Accordion>
+
+  <Accordion title="Expected output">
+    ```bash
+    Creating an optimized production build...
+    Compiled successfully.
+
+    File sizes after gzip:
+
+      46.61 kB  build/static/js/main.abc123.js
+      1.78 kB   build/static/css/main.def456.css
+
+    The project was built assuming it is hosted at /.
+    You can control this with the homepage field in your package.json.
+
+    The build folder is ready to be deployed.
+    You may serve it with a static server:
+
+      npm install -g serve
+      serve -s build
+
+    Find out more about deployment here:
+      https://cra.link/deployment
+    ```
+  </Accordion>
+
+  <Accordion title="Build output structure">
+    ```
+    build/
+    ├── static/
+    │   ├── css/
+    │   │   └── main.{hash}.css
+    │   ├── js/
+    │   │   ├── main.{hash}.js
+    │   │   └── main.{hash}.js.map
+    │   └── media/
+    │       └── logo.{hash}.svg
+    ├── favicon.ico
+    ├── index.html
+    ├── logo192.png
+    ├── logo512.png
+    ├── manifest.json
+    └── robots.txt
+    ```
+
+    <Note>
+      The `build/` directory is ignored by Git (see `.gitignore:12`)
+    </Note>
+  </Accordion>
+
+  <Accordion title="Testing the production build">
+    After building, test the production build locally:
+
+    ```bash
+    npm install -g serve
+    serve -s build
+    ```
+
+    The production build will be served at `http://localhost:3000`.
+  </Accordion>
+</AccordionGroup>
+
+### Build Optimization
+
+<CardGroup cols={2}>
+  <Card title="Code Splitting" icon="scissors">
+    Automatically splits code into smaller chunks for faster loading.
+  </Card>
+  
+  <Card title="Tree Shaking" icon="tree">
+    Removes unused code to reduce bundle size.
+  </Card>
+  
+  <Card title="Minification" icon="compress">
+    Compresses JavaScript and CSS for smaller file sizes.
+  </Card>
+  
+  <Card title="Asset Optimization" icon="image">
+    Optimizes images and includes them with hashed filenames.
+  </Card>
+</CardGroup>
+
+## Advanced Scripts
+
+### npm run eject
+
+Exposes all configuration files for full customization control.
+
+```bash
+npm run eject
+```
+
+<Warning>
+  **This is a one-way operation. Once you eject, you cannot go back!**
+  
+  Only use this command if you absolutely need to customize the build configuration beyond what Create React App provides.
+</Warning>
+
+<AccordionGroup>
+  <Accordion title="What it does">
+    - Removes the `react-scripts` dependency
+    - Copies all configuration files into your project:
+      - Webpack configuration
+      - Babel configuration
+      - ESLint configuration
+      - Build scripts
+    - Gives you full control over the build process
+    - Makes you responsible for maintaining all configurations
+  </Accordion>
+
+  <Accordion title="When to eject">
+    Consider ejecting only if you need to:
+    
+    - Customize webpack loaders or plugins
+    - Modify Babel presets beyond what's configurable
+    - Add complex build-time optimizations
+    - Integrate tools not supported by Create React App
+
+    <Tip>
+      Before ejecting, explore alternatives:
+      - Use [CRACO](https://craco.js.org/) for non-ejecting customization
+      - Check if Create React App supports your use case through configuration
+      - Use environment variables for build-time settings
+    </Tip>
+  </Accordion>
+
+  <Accordion title="What happens after ejecting">
+    After ejecting, you'll see new directories:
+
+    ```
+    hng/
+    ├── config/           # Webpack and build configs
+    ├── scripts/          # Build, start, and test scripts
+    └── ...
+    ```
+
+    All scripts will still work, but they'll use the copied configurations instead of react-scripts.
+  </Accordion>
+</AccordionGroup>
+
+## Script Chaining
+
+You can combine scripts for common workflows:
+
+<CodeGroup>
+```bash Test then build
+npm test -- --watchAll=false && npm run build
+```
+
+```bash Clean and rebuild
+rm -rf build && npm run build
+```
+
+```bash Full CI pipeline
+npm install && npm test -- --watchAll=false && npm run build
+```
+</CodeGroup>
+
+## Environment-Specific Scripts
+
+Customize scripts for different environments using environment variables:
+
+<CodeGroup>
+```json package.json (custom scripts)
+{
+  "scripts": {
+    "start": "react-scripts start",
+    "start:prod": "REACT_APP_ENV=production npm start",
+    "build": "react-scripts build",
+    "build:staging": "REACT_APP_ENV=staging npm run build",
+    "test": "react-scripts test",
+    "test:ci": "CI=true npm test -- --coverage"
+  }
+}
+```
+
+```bash Windows (PowerShell)
+$env:REACT_APP_ENV="production"; npm start
+```
+
+```bash Linux/macOS
+REACT_APP_ENV=production npm start
+```
+</CodeGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Tests fail with module errors">
+    Ensure test configuration is correct:
+
+    1. Check that `src/setupTests.js:5` imports testing library
+    2. Clear Jest cache:
+    ```bash
+    npm test -- --clearCache
+    ```
+  </Accordion>
+
+  <Accordion title="Build fails to minify">
+    Some packages may cause minification errors. Try:
+
+    ```bash
+    # Remove and reinstall dependencies
+    rm -rf node_modules package-lock.json
+    npm install
+    npm run build
+    ```
+
+    If issues persist, check the [Create React App troubleshooting guide](https://create-react-app.dev/docs/troubleshooting/#npm-run-build-fails-to-minify).
+  </Accordion>
+
+  <Accordion title="Development server doesn't reload">
+    If hot reloading stops working:
+
+    1. Restart the development server (`Ctrl+C` then `npm start`)
+    2. Check for syntax errors in your code
+    3. Clear browser cache and hard reload (`Ctrl+Shift+R`)
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Setup Guide" icon="rocket" href="./setup">
+    Return to the setup guide for initial configuration
+  </Card>
+  
+  <Card title="Project Structure" icon="folder-tree" href="./project-structure">
+    Understand how the project files are organized
+  </Card>
+</CardGroup>

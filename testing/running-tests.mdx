@@ -1,0 +1,345 @@
+---
+title: "Running Tests"
+description: "Learn how to run and write tests for your HNG React application using Jest and React Testing Library"
+---
+
+The HNG React project comes with a complete testing setup using [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/react). This guide covers everything you need to know about running and writing tests.
+
+## Testing Stack
+
+The project uses the following testing tools:
+
+- **Jest**: JavaScript testing framework (included with Create React App)
+- **React Testing Library**: Testing utilities for React components
+- **jest-dom**: Custom Jest matchers for DOM assertions
+
+<Accordion title="View Testing Dependencies">
+  ```json package.json
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0"
+  }
+  ```
+</Accordion>
+
+## Running Tests
+
+<Steps>
+  <Step title="Run all tests">
+    Execute the test suite with the npm test command:
+    
+    ```bash
+    npm test
+    ```
+    
+    This starts Jest in **watch mode**, which automatically reruns tests when files change.
+  </Step>
+  
+  <Step title="Watch mode options">
+    Once in watch mode, you have several options:
+    
+    - Press `a` to run all tests
+    - Press `f` to run only failed tests
+    - Press `p` to filter by filename pattern
+    - Press `t` to filter by test name pattern
+    - Press `q` to quit watch mode
+    - Press `Enter` to trigger a test run
+  </Step>
+  
+  <Step title="Run tests once (CI mode)">
+    To run tests once without watch mode (useful for CI/CD):
+    
+    ```bash
+    CI=true npm test
+    ```
+  </Step>
+</Steps>
+
+## Test Output Example
+
+When you run tests, you'll see output like this:
+
+```bash
+PASS  src/App.test.js
+  ✓ renders learn react link (24 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.234 s
+Ran all test suites.
+
+Watch Usage
+ › Press f to run only failed tests.
+ › Press o to only run tests related to changed files.
+ › Press q to quit watch mode.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press Enter to trigger a test run.
+```
+
+## Understanding the Default Test
+
+The project includes a sample test in `src/App.test.js`:
+
+```javascript App.test.js
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders learn react link', () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+This test:
+
+1. **Imports** the necessary utilities from React Testing Library
+2. **Renders** the App component into a virtual DOM
+3. **Queries** for an element containing "learn react" (case-insensitive)
+4. **Asserts** that the element is present in the document
+
+## Test Setup Configuration
+
+The `src/setupTests.js` file runs before each test suite:
+
+```javascript setupTests.js
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+```
+
+This setup file imports `@testing-library/jest-dom`, which provides custom matchers like:
+
+- `toBeInTheDocument()`
+- `toHaveTextContent()`
+- `toHaveClass()`
+- `toBeVisible()`
+- `toBeDisabled()`
+
+## Writing New Tests
+
+### Basic Component Test
+
+Here's how to write a simple test for a new component:
+
+```javascript Button.test.js
+import { render, screen } from '@testing-library/react';
+import Button from './Button';
+
+test('renders button with correct text', () => {
+  render(<Button>Click me</Button>);
+  const buttonElement = screen.getByText(/click me/i);
+  expect(buttonElement).toBeInTheDocument();
+});
+```
+
+### Testing User Interactions
+
+Test user events like clicks and input changes:
+
+```javascript Counter.test.js
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Counter from './Counter';
+
+test('increments counter on button click', async () => {
+  const user = userEvent.setup();
+  render(<Counter />);
+  
+  const button = screen.getByRole('button', { name: /increment/i });
+  const counter = screen.getByText(/count: 0/i);
+  
+  expect(counter).toBeInTheDocument();
+  
+  await user.click(button);
+  
+  expect(screen.getByText(/count: 1/i)).toBeInTheDocument();
+});
+```
+
+### Testing Async Behavior
+
+For components that load data asynchronously:
+
+```javascript UserProfile.test.js
+import { render, screen, waitFor } from '@testing-library/react';
+import UserProfile from './UserProfile';
+
+test('displays user data after loading', async () => {
+  render(<UserProfile userId="123" />);
+  
+  // Initially shows loading state
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  
+  // Wait for user data to appear
+  await waitFor(() => {
+    expect(screen.getByText(/john doe/i)).toBeInTheDocument();
+  });
+});
+```
+
+## Query Methods
+
+React Testing Library provides different query methods:
+
+<CodeGroup>
+  ```javascript getBy - Throws error if not found
+  // Use when element should be in the document
+  const button = screen.getByRole('button');
+  const heading = screen.getByText(/welcome/i);
+  ```
+
+  ```javascript queryBy - Returns null if not found
+  // Use when checking element doesn't exist
+  const error = screen.queryByText(/error/i);
+  expect(error).not.toBeInTheDocument();
+  ```
+
+  ```javascript findBy - Async, waits for element
+  // Use when element appears after async operation
+  const data = await screen.findByText(/loaded/i);
+  ```
+</CodeGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Test user behavior, not implementation">
+    Focus on what users see and do, not internal component state.
+    
+    ```javascript
+    // Good - tests what user sees
+    expect(screen.getByText(/welcome/i)).toBeInTheDocument();
+    
+    // Avoid - tests implementation details
+    expect(component.state.isLoggedIn).toBe(true);
+    ```
+  </Accordion>
+
+  <Accordion title="Use accessible queries">
+    Prefer queries that reflect how users interact with your app:
+    
+    ```javascript
+    // Best - uses semantic roles
+    screen.getByRole('button', { name: /submit/i })
+    
+    // Good - uses labels
+    screen.getByLabelText(/email/i)
+    
+    // Okay - uses text content
+    screen.getByText(/welcome/i)
+    
+    // Avoid - uses test IDs (last resort)
+    screen.getByTestId('submit-button')
+    ```
+  </Accordion>
+
+  <Accordion title="Keep tests isolated">
+    Each test should be independent and not rely on other tests:
+    
+    ```javascript
+    // Each test renders its own component
+    test('shows error message', () => {
+      render(<Form />);
+      // test logic
+    });
+    
+    test('submits form successfully', () => {
+      render(<Form />);
+      // test logic
+    });
+    ```
+  </Accordion>
+
+  <Accordion title="Use descriptive test names">
+    Test names should clearly describe what they verify:
+    
+    ```javascript
+    // Good
+    test('displays error when email is invalid', () => {});
+    test('submits form when all fields are valid', () => {});
+    
+    // Avoid
+    test('test 1', () => {});
+    test('it works', () => {});
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Test File Organization
+
+Organize your test files alongside your components:
+
+```
+src/
+├── components/
+│   ├── Button/
+│   │   ├── Button.js
+│   │   ├── Button.test.js
+│   │   └── Button.css
+│   └── Header/
+│       ├── Header.js
+│       ├── Header.test.js
+│       └── Header.css
+├── App.js
+└── App.test.js
+```
+
+## Coverage Reports
+
+Generate test coverage reports to see which code is tested:
+
+```bash
+npm test -- --coverage --watchAll=false
+```
+
+This creates a coverage report showing:
+
+- **Statements**: Percentage of statements executed
+- **Branches**: Percentage of conditional branches tested
+- **Functions**: Percentage of functions called
+- **Lines**: Percentage of lines executed
+
+## Troubleshooting
+
+<Accordion title="Tests fail with 'element not found'">
+  Make sure you're using the correct query method. If the element appears asynchronously, use `findBy` or `waitFor`:
+  
+  ```javascript
+  // Instead of
+  const element = screen.getByText(/loaded/i);
+  
+  // Use
+  const element = await screen.findByText(/loaded/i);
+  ```
+</Accordion>
+
+<Accordion title="Tests are slow">
+  - Avoid unnecessary `waitFor` with long timeouts
+  - Use `userEvent.setup()` once per test
+  - Keep tests focused and minimal
+  - Run specific test files: `npm test -- Button.test.js`
+</Accordion>
+
+<Accordion title="Watch mode doesn't detect changes">
+  If watch mode isn't picking up changes:
+  
+  ```bash
+  # Stop the test runner and restart it
+  npm test
+  
+  # Or force run all tests by pressing 'a' in watch mode
+  ```
+</Accordion>
+
+## Next Steps
+
+- Learn about [mocking functions and modules](https://jestjs.io/docs/mock-functions)
+- Explore [React Testing Library queries](https://testing-library.com/docs/queries/about)
+- Read about [testing best practices](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
+- Set up continuous integration to run tests automatically

@@ -1,0 +1,286 @@
+---
+title: Building for Production
+description: Learn how to build your HNG React application for production deployment with optimization techniques and best practices
+---
+
+## Overview
+
+The HNG React project uses Create React App with `react-scripts` to handle the build process. Running a production build optimizes your application for the best performance through minification, code splitting, and asset optimization.
+
+## Build Command
+
+To create a production build, run:
+
+```bash
+npm run build
+```
+
+This command executes `react-scripts build`, which:
+- Bundles your application code
+- Minifies JavaScript and CSS files
+- Optimizes assets for production
+- Generates hashed filenames for cache busting
+- Creates source maps for debugging
+
+<Note>
+The build process typically takes 30-60 seconds depending on your application size and system performance.
+</Note>
+
+## Build Output Structure
+
+After running the build command, you'll find a `build/` directory with the following structure:
+
+```
+build/
+├── static/
+│   ├── css/
+│   │   ├── main.[hash].css
+│   │   └── main.[hash].css.map
+│   ├── js/
+│   │   ├── main.[hash].js
+│   │   ├── main.[hash].js.map
+│   │   ├── [chunk].[hash].chunk.js
+│   │   └── [chunk].[hash].chunk.js.map
+│   └── media/
+│       └── [asset].[hash].[ext]
+├── index.html
+├── manifest.json
+├── favicon.ico
+├── logo192.png
+├── logo512.png
+├── robots.txt
+└── asset-manifest.json
+```
+
+### Key Files and Directories
+
+- **index.html**: The main HTML file with inlined critical CSS and script references
+- **static/js/**: Contains all JavaScript bundles with content-based hashes
+- **static/css/**: Contains extracted and minified CSS files
+- **static/media/**: Contains optimized images, fonts, and other assets
+- **asset-manifest.json**: Maps original filenames to hashed filenames
+- **manifest.json**: PWA configuration file for mobile devices
+
+## Build Optimizations
+
+Create React App automatically applies several optimization techniques:
+
+### 1. Minification
+
+All JavaScript and CSS files are minified to reduce file size:
+
+```js
+// Before minification
+function greetUser(name) {
+  return `Hello, ${name}!`;
+}
+
+// After minification
+function greetUser(e){return`Hello, ${e}!`}
+```
+
+### 2. Code Splitting
+
+The build process automatically splits your code into smaller chunks:
+
+- **main.[hash].js**: Your application code
+- **[number].[hash].chunk.js**: Vendor dependencies and lazy-loaded components
+- **runtime-main.[hash].js**: Webpack runtime logic
+
+This allows browsers to cache vendor code separately and only re-download changed application code.
+
+### 3. Asset Optimization
+
+- Images are optimized and moved to `static/media/`
+- Filenames include content hashes for efficient caching
+- Small images (< 10KB) may be inlined as data URLs
+
+### 4. Browser Compatibility
+
+The build targets browsers specified in `package.json`:
+
+```json
+"browserslist": {
+  "production": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
+}
+```
+
+This ensures optimal bundle size while maintaining compatibility with 99.8% of browsers.
+
+## Build Output Example
+
+A typical build output looks like this:
+
+```bash
+Creating an optimized production build...
+Compiled successfully.
+
+File sizes after gzip:
+
+  49.58 KB  build/static/js/main.a1b2c3d4.js
+  1.78 KB   build/static/js/787.e5f6g7h8.chunk.js
+  541 B     build/static/css/main.i9j0k1l2.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+```
+
+## Advanced Build Configuration
+
+### Custom Homepage Path
+
+If deploying to a subdirectory, add a `homepage` field to `package.json`:
+
+```json
+{
+  "homepage": "https://yourdomain.com/app"
+}
+```
+
+This ensures all asset paths are relative to the correct base URL.
+
+### Environment Variables
+
+Create React App supports environment variables prefixed with `REACT_APP_`:
+
+<Steps>
+  <Step title="Create .env.production file">
+    ```bash
+    REACT_APP_API_URL=https://api.production.com
+    REACT_APP_ANALYTICS_ID=UA-123456789-1
+    ```
+  </Step>
+  
+  <Step title="Access in your code">
+    ```javascript
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const analyticsId = process.env.REACT_APP_ANALYTICS_ID;
+    ```
+  </Step>
+  
+  <Step title="Build with environment variables">
+    Variables are embedded at build time:
+    ```bash
+    npm run build
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+Environment variables are embedded into the build at compile time. Never store secrets or sensitive information in `REACT_APP_*` variables as they will be visible in the browser.
+</Warning>
+
+## Testing the Production Build Locally
+
+Before deploying, test your production build locally:
+
+<Steps>
+  <Step title="Install serve globally">
+    ```bash
+    npm install -g serve
+    ```
+  </Step>
+  
+  <Step title="Serve the build directory">
+    ```bash
+    serve -s build
+    ```
+  </Step>
+  
+  <Step title="Open in browser">
+    Navigate to `http://localhost:3000` to test the production build
+  </Step>
+</Steps>
+
+## Build Performance Tips
+
+### 1. Analyze Bundle Size
+
+Install and use `source-map-explorer` to visualize bundle composition:
+
+```bash
+npm install --save source-map-explorer
+```
+
+Add to `package.json` scripts:
+
+```json
+"scripts": {
+  "analyze": "source-map-explorer 'build/static/js/*.js'"
+}
+```
+
+Run after building:
+
+```bash
+npm run build
+npm run analyze
+```
+
+### 2. Enable Code Splitting
+
+Use dynamic imports for route-based code splitting:
+
+```javascript
+import React, { lazy, Suspense } from 'react';
+
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Settings = lazy(() => import('./pages/Settings'));
+
+function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Dashboard />
+    </Suspense>
+  );
+}
+```
+
+### 3. Optimize Images
+
+Compress images before importing:
+- Use WebP format when possible
+- Compress PNG/JPEG files
+- Use appropriate dimensions
+
+## Troubleshooting
+
+### Build Fails to Minify
+
+If you encounter minification errors, check for:
+- Syntax errors in your code
+- Incompatible third-party packages
+- Missing transpilation for node_modules
+
+### Out of Memory Errors
+
+Increase Node.js memory limit:
+
+```bash
+NODE_OPTIONS=--max_old_space_size=4096 npm run build
+```
+
+### Slow Build Times
+
+Optimize build performance:
+- Remove unused dependencies
+- Use `.env.local` instead of inline environment variables
+- Clear `node_modules` and reinstall if needed
+
+## Next Steps
+
+Once your build is ready, proceed to [deploying your application](/deployment/deploying) to a production hosting platform.

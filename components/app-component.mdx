@@ -1,0 +1,327 @@
+---
+title: "App Component"
+description: "The main App component that serves as the root of your React application"
+---
+
+## Overview
+
+The App component is the root component of your HNG React application. It serves as the entry point for your application's component tree and is rendered within React.StrictMode in `index.js`.
+
+## Component Structure
+
+The App component is a functional component that returns a single-page layout with a centered header section.
+
+```jsx App.js
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+## CSS Classes
+
+The App component uses several CSS classes defined in `App.css`:
+
+### `.App`
+
+The root container class that centers all content.
+
+```css
+.App {
+  text-align: center;
+}
+```
+
+### `.App-header`
+
+The main header section with flexbox layout and dark background.
+
+```css
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+```
+
+**Key properties:**
+- Full viewport height (`min-height: 100vh`)
+- Flexbox with column direction for vertical stacking
+- Centered content both horizontally and vertically
+- Responsive font sizing using `calc()` and `vmin` units
+
+### `.App-logo`
+
+Styles for the React logo with animated rotation.
+
+```css
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+```
+
+<Note>
+The logo animation respects user accessibility preferences. It only animates when `prefers-reduced-motion` is set to `no-preference`.
+</Note>
+
+### `.App-link`
+
+Styles for links with React's signature blue color.
+
+```css
+.App-link {
+  color: #61dafb;
+}
+```
+
+### Logo Animation
+
+The spinning animation keyframes:
+
+```css
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+```
+
+## React 18 Integration
+
+The App component is rendered using React 18's new root API and wrapped in StrictMode:
+
+```jsx index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+**React 18 Features Used:**
+
+<Tabs>
+  <Tab title="createRoot">
+    The new `ReactDOM.createRoot()` API enables concurrent features in React 18. This replaces the legacy `ReactDOM.render()` method.
+
+    ```jsx
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+    ```
+  </Tab>
+  
+  <Tab title="StrictMode">
+    `React.StrictMode` helps identify potential problems in your application during development. It:
+    
+    - Identifies components with unsafe lifecycles
+    - Warns about legacy string ref API usage
+    - Warns about deprecated findDOMNode usage
+    - Detects unexpected side effects
+    - Detects legacy context API
+    
+    <Note>
+    StrictMode checks only run in development mode and don't impact the production build.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Modifying the Component
+
+### Adding New Elements
+
+To add new content to the App component, insert elements within the `App-header` section:
+
+```jsx
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1>Welcome to HNG React</h1>
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+```
+
+### Adding State
+
+Convert to a stateful component using React hooks:
+
+```jsx
+import { useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>You clicked {count} times</p>
+        <button onClick={() => setCount(count + 1)}>
+          Click me
+        </button>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Creating Multiple Sections
+
+Expand beyond a single header to create a multi-section layout:
+
+```jsx
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <h1>HNG React Application</h1>
+      </header>
+      
+      <main className="App-main">
+        <section>
+          <h2>Features</h2>
+          <p>Your content here</p>
+        </section>
+      </main>
+      
+      <footer className="App-footer">
+        <p>Footer content</p>
+      </footer>
+    </div>
+  );
+}
+```
+
+Remember to add corresponding CSS classes in `App.css` for new sections:
+
+```css
+.App-main {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.App-footer {
+  background-color: #282c34;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+```
+
+## Best Practices
+
+<Note>
+**Component Organization**: As your application grows, consider breaking down the App component into smaller, reusable components. Move sections like headers, footers, and navigation into separate component files.
+</Note>
+
+1. **Keep App.js lightweight** - Use it primarily for routing and layout structure
+2. **Import only necessary styles** - Component-specific styles should live with their components
+3. **Use semantic HTML** - Maintain proper HTML structure with `<header>`, `<main>`, `<footer>`, etc.
+4. **Maintain accessibility** - Always include `alt` attributes on images and proper ARIA labels
+5. **Leverage React 18 features** - Keep StrictMode enabled during development to catch potential issues early
+
+## Common Modifications
+
+### Changing the Background Color
+
+Modify the `App-header` background color in `App.css`:
+
+```css
+.App-header {
+  background-color: #1a1a2e; /* Change from #282c34 */
+  /* ... other properties */
+}
+```
+
+### Adjusting the Logo Size
+
+Change the logo height in `App.css`:
+
+```css
+.App-logo {
+  height: 30vmin; /* Change from 40vmin for smaller logo */
+  pointer-events: none;
+}
+```
+
+### Removing the Logo Animation
+
+Comment out or remove the media query for the animation:
+
+```css
+/* @media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+} */
+```
+
+## Next Steps
+
+After understanding the App component:
+
+- Learn about [React Router](https://reactrouter.com/) for multi-page applications
+- Explore component composition patterns in the [React documentation](https://react.dev/learn/passing-props-to-a-component)
+- Set up state management with [React Hooks](https://react.dev/reference/react/hooks) for complex applications
+- Configure environment variables as described in the [Available Scripts](/development/available-scripts) guide

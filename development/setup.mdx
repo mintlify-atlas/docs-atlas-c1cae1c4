@@ -1,0 +1,207 @@
+---
+title: "Development Setup"
+description: "Get your development environment ready for the HNG React project"
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your system:
+
+<AccordionGroup>
+  <Accordion title="Node.js Requirements">
+    The HNG React project requires Node.js to run the development server and build tools.
+
+    **Recommended version:** Node.js 14.0.0 or higher
+
+    Check your Node.js version:
+    ```bash
+    node --version
+    ```
+
+    If you need to install or update Node.js, download it from [nodejs.org](https://nodejs.org/).
+  </Accordion>
+
+  <Accordion title="Package Manager">
+    This project uses npm (Node Package Manager), which comes bundled with Node.js.
+
+    Verify npm installation:
+    ```bash
+    npm --version
+    ```
+
+    <Note>
+      The project uses npm by default, but you can also use yarn if preferred.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Clone the Repository">
+    Clone the HNG React project to your local machine:
+    ```bash
+    git clone <repository-url>
+    cd hng
+    ```
+  </Step>
+
+  <Step title="Install Dependencies">
+    Install all required packages defined in `package.json:5-13`:
+    ```bash
+    npm install
+    ```
+
+    This will install:
+    - **React 18.2.0** - Core React library
+    - **React DOM 18.2.0** - React rendering for web
+    - **React Scripts 5.0.1** - Create React App build tools
+    - **Testing libraries** - Jest and React Testing Library
+    - **Web Vitals** - Performance monitoring utilities
+
+    <Note>
+      Installation may take a few minutes depending on your internet connection.
+    </Note>
+  </Step>
+
+  <Step title="Verify Installation">
+    Start the development server to ensure everything is set up correctly:
+    ```bash
+    npm start
+    ```
+
+    The app should open automatically at `http://localhost:3000`. You should see the default React welcome screen.
+  </Step>
+</Steps>
+
+## Editor Setup
+
+For the best development experience, we recommend using Visual Studio Code with the following extensions:
+
+### Recommended VS Code Extensions
+
+<CardGroup cols={2}>
+  <Card title="ES7+ React/Redux Snippets" icon="code">
+    Provides JavaScript and React snippets for faster development.
+  </Card>
+  <Card title="ESLint" icon="check">
+    Integrates ESLint into VS Code for real-time linting feedback.
+  </Card>
+  <Card title="Prettier" icon="paintbrush">
+    Code formatter for consistent code style across the project.
+  </Card>
+  <Card title="Auto Rename Tag" icon="tag">
+    Automatically renames paired HTML/JSX tags.
+  </Card>
+</CardGroup>
+
+### VS Code Settings
+
+Add these settings to your `.vscode/settings.json` for optimal React development:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
+}
+```
+
+## Environment Configuration
+
+The HNG React project uses Create React App's built-in environment variable support.
+
+### Environment Files
+
+Create environment files in the project root as needed:
+
+<CodeGroup>
+```bash .env.local
+# Local development variables (not committed to git)
+REACT_APP_API_URL=http://localhost:3001
+REACT_APP_FEATURE_FLAG=true
+```
+
+```bash .env.development.local
+# Development-specific overrides
+REACT_APP_DEBUG=true
+```
+
+```bash .env.production.local
+# Production-specific overrides
+REACT_APP_API_URL=https://api.production.com
+```
+</CodeGroup>
+
+<Warning>
+  Environment files containing local configuration are already listed in `.gitignore:16-19` and should never be committed to version control.
+</Warning>
+
+### Using Environment Variables
+
+Access environment variables in your React components:
+
+```javascript src/example.js
+function Example() {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  
+  return <div>API: {apiUrl}</div>;
+}
+```
+
+<Note>
+  All custom environment variables must start with `REACT_APP_` to be accessible in your application.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Port 3000 is already in use">
+    If port 3000 is occupied, you'll be prompted to use another port. Alternatively, kill the process using port 3000:
+
+    ```bash
+    # Find process on port 3000
+    lsof -i :3000
+    
+    # Kill the process (replace PID with actual process ID)
+    kill -9 PID
+    ```
+  </Accordion>
+
+  <Accordion title="Module not found errors">
+    If you encounter missing module errors:
+
+    1. Delete `node_modules` and `package-lock.json`
+    2. Reinstall dependencies:
+    ```bash
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+  </Accordion>
+
+  <Accordion title="npm install fails">
+    Try clearing the npm cache:
+    ```bash
+    npm cache clean --force
+    npm install
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+Once your environment is set up:
+
+<CardGroup cols={2}>
+  <Card title="Project Structure" icon="folder-tree" href="./project-structure">
+    Learn about the project's file organization
+  </Card>
+  <Card title="Available Scripts" icon="terminal" href="./available-scripts">
+    Explore all npm scripts for development
+  </Card>
+</CardGroup>
