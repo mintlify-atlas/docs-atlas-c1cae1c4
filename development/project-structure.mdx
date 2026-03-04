@@ -9,7 +9,7 @@ The HNG React project follows the standard Create React App structure, organizin
 
 ## Directory Structure
 
-```
+```text
 hng/
 ├── public/              # Static assets and HTML template
 │   ├── favicon.ico      # Browser tab icon
@@ -107,6 +107,41 @@ export default App;
 - Provides the starting template for building features
 - Exported as default for use in `index.js:4`
 </Accordion>
+
+### Styling
+
+<AccordionGroup>
+  <Accordion title="src/index.css - Global Styles">
+    Global CSS applied to the entire application.
+
+    ```css src/index.css
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    code {
+      font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+    }
+    ```
+
+    **Purpose:**
+    - Sets base styles for the entire app (no margin on body)
+    - Defines system font stack for cross-platform consistency
+    - Applies font smoothing for better text rendering
+    - Styles inline code elements with monospace fonts
+    - Imported in `src/index.js:3` before the app renders
+  </Accordion>
+
+  <Accordion title="src/App.css - Component Styles">
+    Styles specific to the App component. See the [App Component](/components/app-component) documentation for detailed CSS class explanations including `.App`, `.App-header`, `.App-logo`, and `.App-link`.
+  </Accordion>
+</AccordionGroup>
 
 ### Performance Monitoring
 
